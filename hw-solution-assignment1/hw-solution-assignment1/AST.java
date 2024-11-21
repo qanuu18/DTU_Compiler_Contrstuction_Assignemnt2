@@ -21,7 +21,7 @@ public abstract class AST{
 abstract class Expr extends AST{
 //We start by defining our eval method and for its subclasses
 //we know its a boolean expression and take eviroment as and parameter.
-public abstract Boolean eval(Enviroment enviroment);
+public abstract Boolean eval(Environment env);
 
 }
 
@@ -33,8 +33,8 @@ class Conjunction extends Expr{
     // we override the method so its usage can be done in other classes.
     // both expression needs to be true.
     @Override
-    public Boolean eval (Enviroment enviroment){
-        return e1.eval(enviroment) && e2.eval(enviroment);
+    public Boolean eval (Environment env){
+        return e1.eval(env) && e2.eval(env);
     }
 }
 
@@ -44,8 +44,8 @@ class Disjunction extends Expr{
     Disjunction(Expr e1,Expr e2){this.e1=e1; this.e2=e2;}
     // one or the other
     @Override
-    public Boolean eval(Enviroment eviroment){
-        return e1.eval(enviroment) || e2.eval(eviroment);
+    public Boolean eval(Environment env){
+        return e1.eval(env) || e2.eval(env);
     }
 }
 
@@ -54,9 +54,9 @@ class Negation extends Expr{
     Expr e;
     Negation(Expr e){this.e=e;}
     @Override
-    public Boolean eval(Enviroment enviroment){
+    public Boolean eval(Environment env){
 // we negate the result of inner expression
-     return !e.eval(enviroment);
+     return !e.eval(env);
     }
 }
 
@@ -70,7 +70,7 @@ class UseDef extends Expr{
     }
     //For usedef we need tor return error as implementation is first in tast 2.
     @Override
-    public Boolean eval(Enviroment enviroment){
+    public Boolean eval(Environment env){
     error("Implementation not done yet");
     return null;
     }
@@ -81,11 +81,11 @@ class Signal extends Expr{
     Signal(String varname){this.varname=varname;}
     // Here we need the boolean to check if it contains the signal name or else return error
     @Override
-    public Boolean eval(Enviroment enviroment){
-        if(!enviroment.contains(varname)){
+    public Boolean eval(Environment env){
+        if(!env.contains(varname)){
             error("Wrong signal or undeclared signal" + varname);
         }
-        return enviroment.get(varname);
+        return env.get(varname);
     }
 }
 
@@ -112,11 +112,11 @@ class Update extends AST{
     /*Write for this class a method eval that sets the value of the defined signal to the value that the
 given expression currently yields. This method eval also takes an Environment as argument, but
 returns nothing. */
- public Boolean eval(Enviroment enviroment){
+ public Boolean eval(Environment env){
        // We evaluate the current expression value that yields
-    Boolean value = e.eval(enviroment);
+    Boolean value = e.eval(env);
     // And update the signal in the enviroment
-    enviroment.set(name,value);
+    env.set(name,value);
  }
 }
 
@@ -194,11 +194,11 @@ class Circuit extends AST{
     // Handling latches 
     /*– Write a method latchesInit of class Circuit that takes an environment as argument and
         sets all latch outputs to value 0 in this environment*/
-    public void latchesInit(Enviroment enviroment){
+    public void latchesInit(Environment env){
 
         for(String latch : latches){
             // we set latch outputs to 0.
-            enviroment.set(latch + "'", false);
+            env.set(latch + "'", false);
         }
     }
 
@@ -206,17 +206,17 @@ class Circuit extends AST{
     /* Write a method latchesUpdate of class Circuit that also takes an environment as argument
        and sets every latch output to the current value of the latch input. In the example above, it
       would write to A’ the current value of A, and similar for B and C.*/
-      public void latchesUpdate(Enviroment enviroment){
+      public void latchesUpdate(Environment env){
 
         for(String latch : latches){
             //current value of latch
-            Boolean value = enviroment.get(latch);
+            Boolean value = env.get(latch);
             // set latch value to output
-            enviroment.set(latch + "'", value);
+            env.set(latch + "'", value);
 
         }
       }
-      public void initialize(Enviroment enviroment){
+      public void initialize(Environment env){
 // Initialization of simulation happens here
         /*Firsly we ensure that method stops with
 an error if the siminput is not defined for any input signal, or its array has length 0.*/
@@ -243,22 +243,22 @@ for(Trace input : siminputs){
         error("The siminput for the signal" + input.signal + "has length 0. ");
     }
     // We set the value at slot 0 in our enviroment
-    else enviroment.set(input.signal,input.values[0]);
+    else env.set(input.signal,input.values[0]);
 }
 // We call the latchesinit method to initialize all outputs of latches
-latchesInit(enviroment);
+latchesInit(env);
 // After this we run the eval method for every Update to initilization for all remaining signals.
 for(Update update : updates){
 
-    update.eval(enviroment);
+    update.eval(env);
 
 }
 // Lastly we print the enviroment on the screen by using its own toString method
-system.out.println(enviroment.toString());
+system.out.println(env.toString());
 
       }
       // Now we need to implement a nextCycle method that processes the circuit for a single cycle.
-      public void nextCycle(Enviroment enviroment,int cycle){
+      public void nextCycle(Environment env,int cycle){
 
         // The implemenation is similar to the initialization method.
         // But here we need to update the input signals for the cycle.
@@ -268,29 +268,29 @@ system.out.println(enviroment.toString());
                 error("Input for Trace signal" + input.signal + "Is less value than cycle" + cycle);
             }
             // else set value for cycle
-            enviroment.set(input.signal, input.values[cycle]);
+            env.set(input.signal, input.values[cycle]);
 
         }
 
         //Call update latches
-        latchesUpdate(enviroment);
+        latchesUpdate(env);
         // Run the eval method of every Update to update all other signals.
         for(Update update : updates){
-            update.eval(enviroment);
+            update.eval(env);
         }
 // Use the same toString to print the enviroment of the cycle
-system.out.println(eviroment.toString());
+system.out.println(env.toString());
 
 
       }
-      public void runSimulator(Enviroment enviroment){
+      public void runSimulator(Environment env){
 
         //Initialize the circuit
-        initialize(enviroment);
+        initialize(env);
 
         // Run the simulation for n times nextCycle where n is the length of the simulator inputs.
         for(int i = 1; i < simlength; i++){
-            nextCycle(enviroment,i);
+            nextCycle(env,i);
         }
          
       }
