@@ -39,8 +39,9 @@ public class main {
 	ParseTree parseTree = parser.start();
 
 	// The JaxMaker is a visitor that produces html/jax output as a string
-	String result = new JaxMaker().visit(parseTree);
-	System.out.println("\n\n\n"+result);
+	// OBSERVATION LINE 43 AND 44 COMMENTED OUT FOR TASTK1 TESTING ISSUES.
+	//String result = new JaxMaker().visit(parseTree);
+	//System.out.println("\n\n\n"+result);
 
 	/* The AstMaker generates the abstract syntax to be used for
 	   the second assignment, where for the start symbol of the
@@ -69,11 +70,11 @@ public class main {
 }
 
 // The visitor for producing html/jax -- solution for assignment 1, task 3:
-
+/* not needed for assignment 2
 class JaxMaker extends AbstractParseTreeVisitor<String> implements hwVisitor<String> {
 
     public String visitStart(hwParser.StartContext ctx){
-	// 
+	
 	String result = "<!DOCTYPE html>\n"+
 	    "<html><head><title> "+ctx.name.getText()+ "</title>\n"+
 	    "<script src=\"https://polyfill.io/v3/polyfill.min.js?features=es6\"></script>\n"+
@@ -163,7 +164,7 @@ class JaxMaker extends AbstractParseTreeVisitor<String> implements hwVisitor<Str
 	return visit(ctx.e);
     }
 
-}
+}*/
 
 // The visitor for producing the Abstract Syntax (see AST.java).
 

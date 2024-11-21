@@ -134,12 +134,9 @@ public class hwParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_start; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterStart(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitStart(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitStart(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -303,12 +300,9 @@ public class hwParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_defdecl; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterDefdecl(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitDefdecl(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitDefdecl(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -385,12 +379,9 @@ public class hwParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_updatedecl; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterUpdatedecl(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitUpdatedecl(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitUpdatedecl(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -430,12 +421,9 @@ public class hwParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_simInp; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterSimInp(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitSimInp(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitSimInp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -490,12 +478,9 @@ public class hwParser extends Parser {
 		}
 		public UseDefContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterUseDef(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitUseDef(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitUseDef(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -504,12 +489,9 @@ public class hwParser extends Parser {
 		public TerminalNode ID() { return getToken(hwParser.ID, 0); }
 		public SignalContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterSignal(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitSignal(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitSignal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -520,12 +502,9 @@ public class hwParser extends Parser {
 		}
 		public ParenthesisContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterParenthesis(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitParenthesis(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitParenthesis(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -540,12 +519,9 @@ public class hwParser extends Parser {
 		}
 		public DisjunctionContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterDisjunction(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitDisjunction(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitDisjunction(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -556,12 +532,9 @@ public class hwParser extends Parser {
 		}
 		public NegationContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterNegation(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitNegation(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitNegation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -576,12 +549,9 @@ public class hwParser extends Parser {
 		}
 		public ConjunctionContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).enterConjunction(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof hwListener ) ((hwListener)listener).exitConjunction(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof hwVisitor ) return ((hwVisitor<? extends T>)visitor).visitConjunction(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

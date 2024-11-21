@@ -1,5 +1,7 @@
 grammar hw;
 
+
+
 /* A small hardware description language */
 
 start   :  'hardware:' name=ID
