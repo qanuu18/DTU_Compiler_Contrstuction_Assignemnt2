@@ -16,25 +16,48 @@ public abstract class AST{
    expressions with And (Conjunction), Or (Disjunction), and Not
    (Negation). Moreover, an expression can be using any of the
    functions defined in the definitions. */
+// Task 1: 
 
-abstract class Expr extends AST{}
+abstract class Expr extends AST{
+//We start by defining our eval method and for its subclasses
+//we know its a boolean expression and take eviroment as and parameter.
+public abstract Boolean eval(Enviroment enviroment);
+
+}
+
 
 class Conjunction extends Expr{
     // Example: Signal1 * Signal2 
     Expr e1,e2;
     Conjunction(Expr e1,Expr e2){this.e1=e1; this.e2=e2;}
+    // we override the method so its usage can be done in other classes.
+    // both expression needs to be true.
+    @Override
+    public Boolean eval (Enviroment enviroment){
+        return e1.eval(enviroment) && e2.eval(enviroment);
+    }
 }
 
 class Disjunction extends Expr{
     // Example: Signal1 + Signal2 
     Expr e1,e2;
     Disjunction(Expr e1,Expr e2){this.e1=e1; this.e2=e2;}
+    // one or the other
+    @Override
+    public Boolean eval(Enviroment eviroment){
+        return e1.eval(enviroment) || e2.eval(eviroment);
+    }
 }
 
 class Negation extends Expr{
     // Example: /Signal
     Expr e;
     Negation(Expr e){this.e=e;}
+    @Override
+    public Boolean eval(Enviroment enviroment){
+// we negate the result of inner expression
+     return !e.eval(enviroment);
+    }
 }
 
 class UseDef extends Expr{
@@ -45,11 +68,25 @@ class UseDef extends Expr{
     UseDef(String f, List<Expr> args){
 	this.f=f; this.args=args;
     }
+    //For usedef we need tor return error as implementation is first in tast 2.
+    @Override
+    public Boolean eval(Enviroment enviroment){
+    error("Implementation not done yet");
+    return null;
+    }
 }
 
 class Signal extends Expr{
     String varname; // a signal is just identified by a name 
     Signal(String varname){this.varname=varname;}
+    // Here we need the boolean to check if it contains the signal name or else return error
+    @Override
+    public Boolean eval(Enviroment enviroment){
+        if(!enviroment.contains(varname)){
+            error("Wrong signal or undeclared signal" + varname);
+        }
+        return enviroment.get(varname);
+    }
 }
 
 class Def extends AST{
