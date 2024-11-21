@@ -54,6 +54,17 @@ public class main {
 	    simulation of the given hardware for given simulation
 	    inputs. The method for starting the simulation should be
 	    called here for the Circuit p. */
+		// For testing of our simulation we create a new enviroment to acces the methods in the class
+		Enviroment enviroment = new Enviroment();
+
+		// running our runsimulator method.
+		try{
+			p.runSimulator(enviroment);
+		} catch(Exeption e){
+			system.err.println("Error during simulation" + e.getMessage());
+			e.printStackTrace();
+		}
+
     }
 }
 
