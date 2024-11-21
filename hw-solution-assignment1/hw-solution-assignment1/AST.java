@@ -137,7 +137,9 @@ class Trace extends AST{
     }
     //Create a toString method for our output of a trace.
     @Override
-    public toString(){
+    public String toString(){
+        // fixed compiling issue forgot to Initialize StringBuilder()
+        StringBuilder sb = new StringBuilder();
         // We append tµrue or false by 0 or 1 
         for(Boolean value : values){
             sb.append(value ? "1": "0");
