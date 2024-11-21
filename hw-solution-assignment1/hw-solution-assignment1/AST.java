@@ -82,10 +82,10 @@ class Signal extends Expr{
     // Here we need the boolean to check if it contains the signal name or else return error
     @Override
     public Boolean eval(Environment env){
-        if(!env.contains(varname)){
+        if(!env.hasVariable(varname)){
             error("Wrong signal or undeclared signal" + varname);
         }
-        return env.get(varname);
+        return env.getVariable(varname);
     }
 }
 
@@ -116,7 +116,7 @@ returns nothing. */
        // We evaluate the current expression value that yields
     Boolean value = e.eval(env);
     // And update the signal in the enviroment
-    env.set(name,value);
+    env.setVariable(name,value);
  }
 }
 
@@ -200,7 +200,7 @@ class Circuit extends AST{
 
         for(String latch : latches){
             // we set latch outputs to 0.
-            env.set(latch + "'", false);
+            env.setVariable(latch + "'", false);
         }
     }
 
@@ -212,9 +212,9 @@ class Circuit extends AST{
 
         for(String latch : latches){
             //current value of latch
-            Boolean value = env.get(latch);
+            Boolean value = env.getVariable(latch);
             // set latch value to output
-            env.set(latch + "'", value);
+            env.setVariable(latch + "'", value);
 
         }
       }
@@ -228,7 +228,7 @@ if(siminputs == null || siminputs.isEmpty()) {
 
 }
 // We set our simlength to the same length as of the first siminput
-simlength = simiputs.get(0).values.length;
+simlength = siminputs.getVariable(0).values.length;
 // Then we verify that all siminputs have the same length
 for(Trace input : siminputs){
 
@@ -245,7 +245,7 @@ for(Trace input : siminputs){
         error("The siminput for the signal" + input.signal + "has length 0. ");
     }
     // We set the value at slot 0 in our enviroment
-    else env.set(input.signal,input.values[0]);
+    else env.setVariable(input.signal,input.values[0]);
 }
 // We call the latchesinit method to initialize all outputs of latches
 latchesInit(env);
@@ -256,7 +256,7 @@ for(Update update : updates){
 
 }
 // Lastly we print the enviroment on the screen by using its own toString method
-system.out.println(env.toString());
+System.out.println(env.toString());
 
       }
       // Now we need to implement a nextCycle method that processes the circuit for a single cycle.
@@ -270,7 +270,7 @@ system.out.println(env.toString());
                 error("Input for Trace signal" + input.signal + "Is less value than cycle" + cycle);
             }
             // else set value for cycle
-            env.set(input.signal, input.values[cycle]);
+            env.setVariable(input.signal, input.values[cycle]);
 
         }
 
@@ -281,7 +281,7 @@ system.out.println(env.toString());
             update.eval(env);
         }
 // Use the same toString to print the enviroment of the cycle
-system.out.println(env.toString());
+System.out.println(env.toString());
 
 
       }
