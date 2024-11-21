@@ -60,8 +60,8 @@ public class main {
 		// running our runsimulator method.
 		try{
 			p.runSimulator(env);
-		} catch(Exeption e){
-			system.err.println("Error during simulation" + e.getMessage());
+		} catch(Exception e){
+			System.err.println("Error during simulation" + e.getMessage());
 			e.printStackTrace();
 		}
 
