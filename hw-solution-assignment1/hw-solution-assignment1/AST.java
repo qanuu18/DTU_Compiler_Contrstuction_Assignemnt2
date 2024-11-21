@@ -83,7 +83,7 @@ class Signal extends Expr{
     @Override
     public Boolean eval(Environment env){
         if(!env.hasVariable(varname)){
-            error("Wrong signal or undeclared signal" + varname);
+            error("Wrong signal or undeclared signal: " + varname);
         }
         return env.getVariable(varname);
     }
@@ -112,7 +112,7 @@ class Update extends AST{
     /*Write for this class a method eval that sets the value of the defined signal to the value that the
 given expression currently yields. This method eval also takes an Environment as argument, but
 returns nothing. */
- public Boolean eval(Environment env){
+ public void eval(Environment env){
        // We evaluate the current expression value that yields
     Boolean value = e.eval(env);
     // And update the signal in the enviroment
@@ -224,11 +224,11 @@ class Circuit extends AST{
 an error if the siminput is not defined for any input signal, or its array has length 0.*/
 
 if(siminputs == null || siminputs.isEmpty()) {
-    error(" Null error no input entered");
+    error("Null error no input entered");
 
 }
 // We set our simlength to the same length as of the first siminput
-simlength = siminputs.getVariable(0).values.length;
+simlength = siminputs.get(0).values.length;
 // Then we verify that all siminputs have the same length
 for(Trace input : siminputs){
 
@@ -242,7 +242,7 @@ for(Trace input : siminputs){
 for(Trace input : siminputs){
 
     if(input.values.length == 0){
-        error("The siminput for the signal" + input.signal + "has length 0. ");
+        error("The siminput for the signal: " + input.signal + " has length 0.");
     }
     // We set the value at slot 0 in our enviroment
     else env.setVariable(input.signal,input.values[0]);
@@ -264,10 +264,10 @@ System.out.println(env.toString());
 
         // The implemenation is similar to the initialization method.
         // But here we need to update the input signals for the cycle.
-        //Check if inputvalue is same lentgh cycle.
+        //Check if input value is same lentgh cycle.
         for(Trace input : siminputs){
             if(cycle >= input.values.length){
-                error("Input for Trace signal" + input.signal + "Is less value than cycle" + cycle);
+                error("Input for Trace signal: " + input.signal + " missing value for cycle " + cycle);
             }
             // else set value for cycle
             env.setVariable(input.signal, input.values[cycle]);
@@ -287,6 +287,10 @@ System.out.println(env.toString());
       }
       public void runSimulator(Environment env){
 
+           if(siminputs == null || siminputs.isEmpty()) {
+              error("Null error no input entered");
+
+}
         //Initialize the circuit
         initialize(env);
 
