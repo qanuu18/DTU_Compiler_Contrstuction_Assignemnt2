@@ -98,6 +98,7 @@ class Def extends AST{
     Def(String f, List<String> args, Expr e){
 	this.f=f; this.args=args; this.e=e;
     }
+    // No eval because of no userdefined functions for task1
 }
 
 // An Update is any of the lines " signal = expression "
@@ -215,6 +216,83 @@ class Circuit extends AST{
 
         }
       }
+      public void initialize(Enviroment enviroment){
+// Initialization of simulation happens here
+        /*Firsly we ensure that method stops with
+an error if the siminput is not defined for any input signal, or its array has length 0.*/
 
+if(siminputs == null || siminputs.isEmpty()) {
+    error(" Null error no input entered");
+
+}
+// We set our simlength to the same length as of the first siminput
+simlength = simiputs.get(0).values.length;
+// Then we verify that all siminputs have the same length
+for(Trace input : siminputs){
+
+    if(input.values.length != simlength){
+        error("Siminputs must have same length.");
+    }
+
+}
+
+// Now that we are sure the have same length we load the value into our enviroment
+for(Trace input : siminputs){
+
+    if(input.values.length == 0){
+        error("The siminput for the signal" + input.signal + "has length 0. ");
+    }
+    // We set the value at slot 0 in our enviroment
+    else enviroment.set(input.signal,input.values[0]);
+}
+// We call the latchesinit method to initialize all outputs of latches
+latchesInit(enviroment);
+// After this we run the eval method for every Update to initilization for all remaining signals.
+for(Update update : updates){
+
+    update.eval(enviroment);
+
+}
+// Lastly we print the enviroment on the screen by using its own toString method
+system.out.println(enviroment.toString());
+
+      }
+      // Now we need to implement a nextCycle method that processes the circuit for a single cycle.
+      public void nextCycle(Enviroment enviroment,int cycle){
+
+        // The implemenation is similar to the initialization method.
+        // But here we need to update the input signals for the cycle.
+        //Check if inputvalue is same lentgh cycle.
+        for(Trace input : siminputs){
+            if(cycle >= input.values.length){
+                error("Input for Trace signal" + input.signal + "Is less value than cycle" + cycle);
+            }
+            // else set value for cycle
+            enviroment.set(input.signal, input.values[cycle]);
+
+        }
+
+        //Call update latches
+        latchesUpdate(enviroment);
+        // Run the eval method of every Update to update all other signals.
+        for(Update update : updates){
+            update.eval(enviroment);
+        }
+// Use the same toString to print the enviroment of the cycle
+system.out.println(eviroment.toString());
+
+
+      }
+      public void runSimulator(Enviroment enviroment){
+
+        //Initialize the circuit
+        initialize(enviroment);
+
+        // Run the simulation for n times nextCycle where n is the length of the simulator inputs.
+        for(int i = 1; i < simlength; i++){
+            nextCycle(enviroment,i);
+        }
+         
+      }
     
 }
