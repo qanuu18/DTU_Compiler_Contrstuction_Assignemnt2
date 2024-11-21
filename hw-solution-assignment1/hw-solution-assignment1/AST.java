@@ -108,6 +108,15 @@ class Update extends AST{
     String name;  // Signal being updated, e.g. "Signal1"
     Expr e;  // The value it receives, e.g., "/Signal2"
     Update(String name, Expr e){this.e=e; this.name=name;}
+    /*Write for this class a method eval that sets the value of the defined signal to the value that the
+given expression currently yields. This method eval also takes an Environment as argument, but
+returns nothing. */
+ public Boolean eval(Enviroment enviroment){
+       // We evaluate the current expression value that yields
+    Boolean value = e.eval(enviroment);
+    // And update the signal in the enviroment
+    enviroment.set(name,value);
+ }
 }
 
 /* A Trace is a signal and an array of Booleans, for instance each
@@ -124,6 +133,17 @@ class Trace extends AST{
     Trace(String signal, Boolean[] values){
 	this.signal=signal;
 	this.values=values;
+    }
+    //Create a toString method for our output of a trace.
+    @Override
+    public toString(){
+        // We append tµrue or false by 0 or 1 
+        for(Boolean value : values){
+            sb.append(value ? "1": "0");
+        }
+        // We here append the signal name
+        sb.append(" ").append(signal);
+        return sb.toString();
     }
 }
 
@@ -170,4 +190,31 @@ class Circuit extends AST{
 	this.updates=updates;
 	this.siminputs=siminputs;
     }
+    // Handling latches 
+    /*– Write a method latchesInit of class Circuit that takes an environment as argument and
+        sets all latch outputs to value 0 in this environment*/
+    public void latchesInit(Enviroment enviroment){
+
+        for(String latch : latches){
+            // we set latch outputs to 0.
+            enviroment.set(latch + "'", false);
+        }
+    }
+
+    // Create method latches update
+    /* Write a method latchesUpdate of class Circuit that also takes an environment as argument
+       and sets every latch output to the current value of the latch input. In the example above, it
+      would write to A’ the current value of A, and similar for B and C.*/
+      public void latchesUpdate(Enviroment enviroment){
+
+        for(String latch : latches){
+            //current value of latch
+            Boolean value = enviroment.get(latch);
+            // set latch value to output
+            enviroment.set(latch + "'", value);
+
+        }
+      }
+
+    
 }
