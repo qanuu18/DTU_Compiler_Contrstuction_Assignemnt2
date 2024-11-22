@@ -91,7 +91,7 @@ class UseDef extends Expr{
     }
     
     //Lastly we evaluate the function body in a new environment
-    return def.f.eval(newENV);
+    return def.e.eval(newENV);
 
     
     }
