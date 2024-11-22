@@ -41,7 +41,9 @@ class Environment {
     // the current environment and using it as an argument to the
     // constructor for the new environemnt
     public HashMap<String,Def> getDefs(){return defs;};
+
     
+
     public void setVariable(String name, Boolean value) {
 	variableValues.put(name, value);
     }

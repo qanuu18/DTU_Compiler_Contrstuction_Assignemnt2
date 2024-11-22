@@ -69,10 +69,31 @@ class UseDef extends Expr{
 	this.f=f; this.args=args;
     }
     //For usedef we need tor return error as implementation is first in tast 2.
+    // Now we update our eval method to implement task 2. 
+    // delete error();
     @Override
     public Boolean eval(Environment env){
-    error("Implementation not done yet");
-    return null;
+    // Firstly we need to fetch function definition from environment
+    Def def = env.getDef(f);
+
+    // We then create a new environment for evaluation of the body 
+    Environment newENV = new Environment(env);
+
+    // we then bind all arguments to the formal paramtres
+    for(int i = 0; i < def.args.size(), i++){
+        //parameter name stored
+        String pname = def.args.get(i);
+        // evaluation of actual argument stored
+        Boolean argvalue = args.get(i).eval(env);
+        //bind the two in newly created environment
+        newENV.setVariable(pname, argvalue);
+
+    }
+    
+    //Lastly we evaluate the function body in a new environment
+    return def.f.eval(newENV);
+
+    
     }
 }
 
