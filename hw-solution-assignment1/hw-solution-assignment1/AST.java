@@ -80,7 +80,7 @@ class UseDef extends Expr{
     Environment newENV = new Environment(env);
 
     // we then bind all arguments to the formal paramtres
-    for(int i = 0; i < def.args.size(), i++){
+    for(int i = 0; i < def.args.size(); i++){
         //parameter name stored
         String pname = def.args.get(i);
         // evaluation of actual argument stored
