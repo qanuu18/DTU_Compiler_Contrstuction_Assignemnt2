@@ -156,19 +156,28 @@ class Trace extends AST{
 	this.signal=signal;
 	this.values=values;
     }
+    public String getTraceValues(Boolean[] values) {
+    StringBuilder sb = new StringBuilder();
+    for (Boolean value : values) {
+        sb.append(value != null && value ? "1" : "0");
+    }
+    return sb.toString();
     //Create a toString method for our output of a trace.
-    @Override
+   /* @Override
     public String toString(){
         // fixed compiling issue forgot to Initialize StringBuilder()
         StringBuilder sb = new StringBuilder();
         // We append tµrue or false by 0 or 1 
         for(Boolean value : values){
-            sb.append(value ? "1": "0");
+            sb.append(value != null && value ? "1": "0");
         }
         // We here append the signal name
         sb.append(" ").append(signal);
         return sb.toString();
-    }
+    }*/
+    
+}
+
 }
 
 /* The main data structure of this simulator: the entire circuit with
@@ -241,7 +250,7 @@ class Circuit extends AST{
             //current value of latch
             Boolean value = env.getVariable(latch);
             // set latch value to output
-            env.setVariable(latch + "'", value);
+            env.setVariable(latch + "'", value);    
 
         }
       }
@@ -258,12 +267,11 @@ if(siminputs == null || siminputs.isEmpty()) {
 simlength = siminputs.get(0).values.length;
 // Then we verify that all siminputs have the same length
 for(Trace input : siminputs){
-
     if(input.values.length != simlength){
         error("Siminputs must have same length.");
     }
 
-}
+}   
 
 // Now that we are sure the have same length we load the value into our enviroment
 for(Trace input : siminputs){
@@ -274,6 +282,7 @@ for(Trace input : siminputs){
     // We set the value at slot 0 in our enviroment
     else env.setVariable(input.signal,input.values[0]);
 }
+
 // We call the latchesinit method to initialize all outputs of latches
 latchesInit(env);
 // After this we run the eval method for every Update to initilization for all remaining signals.
@@ -282,10 +291,26 @@ for(Update update : updates){
     update.eval(env);
 
 }
+
+// task 3 implementation
+ simoutputs = new ArrayList<>();
+ for(String output : outputs){
+
+Boolean[] values = new Boolean[simlength];
+for(int i = 0; i < values.length; i++){
+    values[i] = env.getVariable(output);
+}
+simoutputs.add(new Trace(output, values));
+
+ }
+
 // Lastly we print the enviroment on the screen by using its own toString method
 System.out.println(env.toString());
 
-      }
+
+ }
+
+      
       // Now we need to implement a nextCycle method that processes the circuit for a single cycle.
       public void nextCycle(Environment env,int cycle){
 
@@ -306,27 +331,63 @@ System.out.println(env.toString());
         latchesUpdate(env);
         // Run the eval method of every Update to update all other signals.
         for(Update update : updates){
-            update.eval(env);
+            update.eval(env);   
         }
+    // Task 3 implementation updating output traces
+    for(Trace trace : simoutputs){
+        String output = trace.signal;
+        Boolean value = env.getVariable(output);
+        trace.values[cycle] = (value != null) ? value : false;
+    }
+
 // Use the same toString to print the enviroment of the cycle
 System.out.println(env.toString());
 
-
       }
-      public void runSimulator(Environment env){
+     public void runSimulator(Environment env) {
+    if (siminputs == null || siminputs.isEmpty()) {
+        error("Null error: No inputs provided.");
+    }
 
-           if(siminputs == null || siminputs.isEmpty()) {
-              error("Null error no input entered");
+    // Initialize the circuit
+    initialize(env);
+
+    // Run the simulation for the number of cycles in the simulation input length
+    for (int i = 1; i < simlength; i++) {
+        nextCycle(env, i);
+    }
+
+    // Print formatted output for Task 3
+    System.out.println("\nPrinting simulation outputs:\n");
+
+    // Calculate the maximum signal name length for proper alignment
+    int maxSignalLength = 0;
+    for (Trace trace : simoutputs) {
+        maxSignalLength = Math.max(maxSignalLength, trace.signal.length());
+    }
+    for (Trace trace : siminputs) {
+        maxSignalLength = Math.max(maxSignalLength, trace.signal.length());
+    }
+
+    // Print simulation inputs first
+    for (Trace trace : siminputs) {
+        System.out.printf("%-" + maxSignalLength + "s %s\n",
+        trace.getTraceValues(trace.values), trace.signal);
+
+    }
+
+    // Print simulation outputs after inputs
+    for (Trace trace : simoutputs) {
+        System.out.printf("%-" + maxSignalLength + "s %s\n",
+        trace.getTraceValues(trace.values), trace.signal);
+
+    }
+}
+
 
 }
-        //Initialize the circuit
-        initialize(env);
 
-        // Run the simulation for n times nextCycle where n is the length of the simulator inputs.
-        for(int i = 1; i < simlength; i++){
-            nextCycle(env,i);
-        }
-         
-      }
+
+
     
-}
+
