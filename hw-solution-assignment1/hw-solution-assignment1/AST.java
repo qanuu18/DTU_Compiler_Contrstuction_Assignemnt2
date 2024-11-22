@@ -219,6 +219,12 @@ class Circuit extends AST{
         sets all latch outputs to value 0 in this environment*/
     public void latchesInit(Environment env){
 
+        if(latches.isEmpty()){
+
+            System.out.println("No latches to initialize.");
+            return;
+        }
+    
         for(String latch : latches){
             // we set latch outputs to 0.
             env.setVariable(latch + "'", false);
@@ -292,6 +298,7 @@ System.out.println(env.toString());
             }
             // else set value for cycle
             env.setVariable(input.signal, input.values[cycle]);
+            
 
         }
 
