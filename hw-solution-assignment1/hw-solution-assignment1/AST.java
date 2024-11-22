@@ -77,7 +77,7 @@ class UseDef extends Expr{
     Def def = env.getDef(f);
 
     // We then create a new environment for evaluation of the body 
-    Environment newENV = new Environment(env);
+    Environment newEnv = new Environment(env);
 
     // we then bind all arguments to the formal paramtres
     for(int i = 0; i < def.args.size(); i++){
@@ -86,12 +86,12 @@ class UseDef extends Expr{
         // evaluation of actual argument stored
         Boolean argvalue = args.get(i).eval(env);
         //bind the two in newly created environment
-        newENV.setVariable(pname, argvalue);
+        newEnv.setVariable(pname, argvalue);
 
     }
     
     //Lastly we evaluate the function body in a new environment
-    return def.e.eval(newENV);
+    return def.e.eval(newEnv);
 
     
     }
