@@ -56,7 +56,7 @@ public class main {
 	    inputs. The method for starting the simulation should be
 	    called here for the Circuit p. */
 		// For testing of our simulation we create a new enviroment to acces the methods in the class
-		Environment env = new Environment();
+		Environment env = new Environment(p.Definitions);
 
 		// running our runsimulator method.
 		try{
